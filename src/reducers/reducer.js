@@ -1,33 +1,79 @@
-import { ADD_DRAGON } from "../constants/actions";
+import {
+  ADD_DRAGON,
+  DELETE_DRAGON,
+  REVERSE_DRAGON,
+  SET_DRAGON,
+} from "../constants/actions";
 
 // initialisation des states : SOURCE DE VERITE
-let stateInit = {
+const stateInit = {
   dragons: ["Apalala", "Balaur", "Bolla"],
-  count: 3,
   dragon: "",
-  message: ""
+  count: 3,
+  message: "",
 };
 
-let reducerDragon = (state = stateInit, action = {}) => {
+const reducer = (state = stateInit, action = {}) => {
+  const { dragons, dragon } = state;
+
   switch (action.type) {
     case ADD_DRAGON:
-      // Message d'erreur si on essaie de rentrer du vide dans le tableau
-      if (state.dragons === null)
-        return { ...state, message: "vous n'avez pas rentré de nom", elems };
+      if (dragon.trim() === "") {
+        return {
+          ...state,
+          message: "Vous avez oublié le nom de votre dragon",
+        };
+      }
 
-    // Message d'erreur si on essaie de rentrer un nom de dragon qui existe déjà
+      if (dragons.includes(dragon)) {
+        return {
+          ...state,
+          message: `Le dragon ${dragon} existe déjà !!`,
+        };
+      }
 
-    // Une fois les erreurs traitées, on insère le nouveau nom dans le tableau
-    // Messaage qui indique que l'ajout a bien été fait
-    // mise à jour du compteur de dragons
+      return {
+        ...state,
+        dragons: [...dragons, dragon], // dragons.concat(dragon), nouvel ref du tableau
+        message: `Merci votre dragon ${dragon} a bien été ajouté `,
+        dragon: "",
+        count: state.count + 1,
+      };
 
-    // case pour récupérer la valeur du nom du dragon
+    case SET_DRAGON:
+      const { name, value } = action.payload;
+
+      return {
+        ...state,
+        [name]: value,
+      };
+
+    case DELETE_DRAGON:
+      const dragonDelete = action.payload;
+
+      // if (dragons.includes(dragonDelete) === false) {
+      // 	return {
+      // 		...state,
+      // 		message: `Attention vous essayez de supprimer un dragon qui n'existe pas `,
+      // 	};
+      // }
+
+      return {
+        ...state,
+        dragons: dragons.filter((dragon) => dragon !== dragonDelete),
+        count: state.count - 1,
+        message: `Le dragon ${dragonDelete} a bien été supprimé`,
+      };
+
+    case REVERSE_DRAGON:
+      return {
+        ...state,
+        dragons: dragons.reverse(),
+      };
 
     default:
       return state;
   }
-
-  return state;
 };
 
 export default reducer;

@@ -1,22 +1,21 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
-import provider from "./provider/Provider";
-import actions from "./constants/actions";
-//import reportWebVitals from "./reportWebVitals";
 
-// 1ÈRE ÉTAPE
-// Redux mise en place dans notre application
-// importer provider et create store
+import reducer from "./reducers/reducer";
+import { createStore } from "redux";
+import { Provider } from "react-redux"; // permet de contextualiser le store Redux dans React
 
-// récupérer le store, le state avec son reducer, il nous permettra de contextualiser
+// création du store => prêt pour l'App
+const store = createStore(reducer);
 
-ReactDOM.render(
+const root = ReactDOM.createRoot(document.getElementById("root"));
+
+root.render(
   <React.StrictMode>
-    <provider>
+    <Provider store={store}>
       <App />
-    </provider>
-  </React.StrictMode>,
-  document.getElementById("root")
+    </Provider>
+  </React.StrictMode>
 );

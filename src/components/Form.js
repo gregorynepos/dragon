@@ -1,23 +1,34 @@
 // Importer les éléments dont on a besoin pour utiliser les state nécessaires ici
 // ainsi que les hooks
 
-const Form = () => {
-  // dans une constante on récupère dragon (pour le nom) dans notre state
-  // on oublie pas le dispatch
+import { useDispatch, useSelector } from "react-redux";
+import { addDragon, setDragon } from "../actions/actions-types";
 
-  const handleSubmit = () => {
-    // à la soumission du form on ajoute le dragon appel du dispatch
+const Form = () => {
+  const { dragon } = useSelector((state) => state);
+  const dispatch = useDispatch();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    dispatch(addDragon());
   };
 
-  const handleChange = () => {
-    // récup de la valeur de l'input appel du dispatch
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    // pratique si vous avez plusieurs champs à contrôler
+    // voir le reducer
+    dispatch(setDragon({ name, value }));
   };
 
   return (
-    <form>
-      <label>Nom:</label>
-      <input type="text" />
-      <button>Ajouter</button>
+    <form onSubmit={handleSubmit}>
+      <label>
+        Name (dragon) :
+        <Input onChange={handleChange} value={dragon} name="dragon" />
+      </label>
+      <button>Add</button>
     </form>
   );
 };

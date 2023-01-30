@@ -1,33 +1,43 @@
-// Hook qui permet d'utiliser les state pour lire (afficher)
-import { useSelector } from "react-redux";
-//import Question from "./components/Question";
-// 4ÈME PARTIE RÉCUP DES DATAS POUR AFFICHAGE
+import "./App.css";
+import Dragon from "./components/Dragon";
+import Form from "./components/Form";
+import { Column, Row, Container } from "./Styles/Grid";
+import Nav from "./Styles/Nav";
+
+import { useSelector, useDispatch } from "react-redux";
+import GlobalStyle from "./Styles/Global";
+import Button from "./Styles/Button";
+import { reverseDragon } from "./actions/actions-types";
 
 const App = () => {
-  // lecture du store
-  const { name } = useSelector((state) => state);
+  const { count, message } = useSelector((state) => state);
+  const dispatch = useDispatch();
 
-  // Array.from sur un Map permet de le transformer en tableau de tableau clé/val
   return (
-    <>
-      <div className="App">
-        {Array.from(name).map((q, i) => {
-          const [id, name] = q;
-
-          return <Name key={i} id={id} {...name} />;
-        })}
-      </div>
-      {responses.length > 0 && (
-        <ul>
-          {responses.map((r, i) => (
-            <li key={i}>
-              QUESTION {r.id} -
-              {r.response ? "Bonne réponse" : "Mauvaise réponse"}
-            </li>
-          ))}
-        </ul>
+    <Container>
+      <GlobalStyle />
+      {message && (
+        <Row>
+          <Column number={1}>
+            <p>{message}</p>
+          </Column>
+        </Row>
       )}
-    </>
+      <Row>
+        <Column number={1}>
+          <Nav>Number of Dragon(s) : {count}</Nav>
+        </Column>
+      </Row>
+      <Row>
+        <Column number={3}>
+          <Form />
+          <Button onClick={() => dispatch(reverseDragon())}>Reverse</Button>
+        </Column>
+        <Column number={1}>
+          <Dragon />
+        </Column>
+      </Row>
+    </Container>
   );
 };
 
